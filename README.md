@@ -7,8 +7,6 @@ Windows host. It follows Microsoft's
 [Data collection for troubleshooting 802.1X authentication issues](https://learn.microsoft.com/en-us/troubleshoot/windows-client/networking/data-collection-for-troubleshooting-802-1x-authentication-issues)
 and adds Wi-Fi specific sources and an automatic first-pass analysis.
 
-Created in [T3 Code](https://t3.codes).
-
 ## Requirements
 
 - Windows 10/11 or Windows Server with Windows PowerShell 5.1 (PowerShell 7 should work), run **as administrator**.
