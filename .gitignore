@@ -1,0 +1,5 @@
+# collector output
+MSLOG/
+*_redaction_map.csv
+*.etl
+*.zip
