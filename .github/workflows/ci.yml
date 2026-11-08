@@ -1,0 +1,42 @@
+# Lints the PowerShell script with PSScriptAnalyzer (SG303 baseline v1):
+# fails on errors and on syntax that Windows PowerShell 5.1 cannot run;
+# warnings are listed in the log. Make the "lint" job a required check.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/powershell:7.5-ubuntu-24.04@sha256:042240d57ec9e47e511033b92625a8d95875ee5860af3015992c248b58a8be81
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module PSScriptAnalyzer -RequiredVersion 1.25.0 -Scope CurrentUser -Force
+          $settings = @{
+              Rules = @{
+                  PSUseCompatibleSyntax = @{ Enable = $true; TargetVersions = @('5.1', '7.4') }
+              }
+          }
+          $results = Invoke-ScriptAnalyzer -Path . -Recurse -Settings $settings
+          $results | Format-Table -AutoSize Severity, RuleName, ScriptName, Line, Message | Out-String -Width 220
+          $errors = @($results | Where-Object { $_.Severity -eq 'Error' -or $_.RuleName -eq 'PSUseCompatibleSyntax' })
+          "Findings: $(@($results).Count), blocking: $($errors.Count)"
+          if ($errors.Count -gt 0) { exit 1 }

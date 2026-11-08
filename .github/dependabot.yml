@@ -1,0 +1,18 @@
+# Dependabot config (SG303 baseline v1). The script has no dependencies; this
+# keeps the GitHub Actions up to date. Weekly on Sunday evening, minor and
+# patch updates grouped and merged automatically by dependabot-auto-merge.yml
+# once the checks pass. The 7-day cooldown skips versions younger than a week.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: sunday
+      time: "22:00"
+      timezone: Europe/Zurich
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        update-types: [minor, patch]

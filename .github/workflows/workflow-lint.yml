@@ -1,0 +1,40 @@
+# Lints GitHub Actions workflows (baseline v1): actionlint finds syntax and
+# shell errors, zizmor finds security problems (injection, broad permissions,
+# unpinned actions). Copy to .github/workflows/workflow-lint.yml.
+name: Workflow lint
+
+on:
+  pull_request:
+    paths: [".github/workflows/**", ".github/dependabot.yml"]
+  push:
+    branches: [main]
+    paths: [".github/workflows/**", ".github/dependabot.yml"]
+
+permissions:
+  contents: read
+
+jobs:
+  actionlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: actionlint
+        uses: docker://rhysd/actionlint:1.7.12@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667
+        with:
+          args: -color
+
+  zizmor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: zizmor
+        uses: zizmorcore/zizmor-action@45d7276c9ca790aabd705e31ca99c6185c3e76dd # v0.8.1
+        with:
+          # Print findings in the log and fail the job instead of uploading
+          # SARIF, which private repos cannot receive without GitHub Advanced
+          # Security.
+          advanced-security: false
