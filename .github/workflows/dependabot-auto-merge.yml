@@ -1,0 +1,34 @@
+# Merges minor and patch Dependabot PRs automatically once the required checks
+# pass (baseline v1). Majors stay open for review. Copy to
+# .github/workflows/dependabot-auto-merge.yml.
+#
+# Needs in the repo settings: "Allow auto-merge" on, and a ruleset on the
+# default branch with required status checks. Without required checks,
+# `--auto` merges immediately.
+#
+# Note: merges done with GITHUB_TOKEN do not trigger other workflows on push.
+# If a release or image build must run after such a merge, also trigger it on
+# a schedule or with workflow_dispatch.
+name: Dependabot auto-merge
+
+on: pull_request
+
+permissions: {}
+
+jobs:
+  auto-merge:
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository_owner == 'SG303'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # merge the PR into the default branch
+      pull-requests: write # enable auto-merge on the PR
+    steps:
+      - name: Read update metadata
+        id: meta
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+      - name: Enable auto-merge for minor and patch updates
+        if: steps.meta.outputs.update-type != 'version-update:semver-major'
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
