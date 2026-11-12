@@ -7,6 +7,9 @@ Windows host. It follows Microsoft's
 [Data collection for troubleshooting 802.1X authentication issues](https://learn.microsoft.com/en-us/troubleshoot/windows-client/networking/data-collection-for-troubleshooting-802-1x-authentication-issues)
 and adds Wi-Fi specific sources and an automatic first-pass analysis.
 
+> [!NOTE]
+> Personal project, built with AI coding agents under my supervision. Review the code carefully before you use it.
+
 ## Requirements
 
 - Windows 10/11 or Windows Server with Windows PowerShell 5.1 (PowerShell 7 should work), run **as administrator**.
@@ -103,6 +106,12 @@ screenshots, packets). Wi-Fi pre-shared keys are not exported (`key=clear` is ne
   07_Monitor/        signal/BSSID samples, ping.csv, neighbour APs
   collector.log
 ```
+
+## Status
+
+Personal project, built with AI coding agents under my supervision. There is
+no support and no stability guarantee; review the code carefully before you
+rely on it. See [LICENSE](LICENSE) for the warranty terms.
 
 ## License
 
