@@ -3,3 +3,8 @@ MSLOG/
 *_redaction_map.csv
 *.etl
 *.zip
+
+# Local secrets
+.env
+.env.*
+!.env.example
