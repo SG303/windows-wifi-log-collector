@@ -1,6 +1,6 @@
 # Merges minor and patch Dependabot PRs automatically once the required checks
-# pass (baseline v1). Majors stay open for review. Copy to
-# .github/workflows/dependabot-auto-merge.yml.
+# pass (baseline v2). Majors and updates of unknown type stay open for review.
+# Copy to .github/workflows/dependabot-auto-merge.yml.
 #
 # Needs in the repo settings: "Allow auto-merge" on, and a ruleset on the
 # default branch with required status checks. Without required checks,
@@ -27,7 +27,9 @@ jobs:
         id: meta
         uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
       - name: Enable auto-merge for minor and patch updates
-        if: steps.meta.outputs.update-type != 'version-update:semver-major'
+        if: >-
+          steps.meta.outputs.update-type == 'version-update:semver-minor' ||
+          steps.meta.outputs.update-type == 'version-update:semver-patch'
         run: gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
