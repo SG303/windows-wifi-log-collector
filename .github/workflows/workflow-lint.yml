@@ -1,14 +1,14 @@
-# Lints GitHub Actions workflows (baseline v1): actionlint finds syntax and
+# Lints GitHub Actions workflows (baseline v2): actionlint finds syntax and
 # shell errors, zizmor finds security problems (injection, broad permissions,
 # unpinned actions). Copy to .github/workflows/workflow-lint.yml.
+# Runs on every pull request, so the "actionlint" and "zizmor" jobs can be
+# required checks in the ruleset (a path filter would leave them pending).
 name: Workflow lint
 
 on:
   pull_request:
-    paths: [".github/workflows/**", ".github/dependabot.yml"]
   push:
     branches: [main]
-    paths: [".github/workflows/**", ".github/dependabot.yml"]
 
 permissions:
   contents: read
